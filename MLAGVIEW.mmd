@@ -6,7 +6,7 @@ flowchart TB
         direction LR
         n2["Leaf1 <br/>• Vlan: 4094, 10.0.1.1/30<br/>• Port-Channel 100: trunk<br/>• MLAG: domain-id {mlag-peer}"]
         n3["Leaf2 <br/>• Vlan: 4094, 10.0.1.2/30<br/>• Port-Channel 100: trunk<br/>• MLAG: domain-id {mlag-peer}"]
-        n2 -----|"Link 1"| n3
+        n2 -----|"Link 1 (Peer Link)"| n3
     end
 
     n1 --> leaves
