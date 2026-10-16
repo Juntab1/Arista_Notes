@@ -1,12 +1,16 @@
+---
+config:
+  layout: fixed
+---
 flowchart TB
-    n1["Spine"]
-    n1@{ shape: trap-b }
+    n2["Leaf1 <br>• Vlan: 4094, 10.0.1.1/30<br>• Port-Channel 100: trunk<br>• MLAG: domain-id {mlag-peer}"] -- "[Eth1] ---------- [Eth1]<br>Link 1 (Peer Link)" --- n3["Leaf2 <br>• Vlan: 4094, 10.0.1.2/30<br>• Port-Channel 100: trunk<br>• MLAG: domain-id {mlag-peer}"]
+    n1["Spine <br>• OSPF: network 10.0.0.0/29"] --- n3 & n2
+    n2 -- "Port-Channel 20<br>MLAG 20 / LACP" --- n4["Server <br>• VLAN: 20<br>"]
+    n3 -- "Port-Channel 20<br>MLAG 20 / LACP" --- n4
 
-    subgraph leaves [" "]
-        direction LR
-        n2["Leaf1 <br/>• Vlan: 4094, 10.0.1.1/30<br/>• Port-Channel 100: trunk<br/>• MLAG: domain-id {mlag-peer}"]
-        n3["Leaf2 <br/>• Vlan: 4094, 10.0.1.2/30<br/>• Port-Channel 100: trunk<br/>• MLAG: domain-id {mlag-peer}"]
-        n2 -----|"Link 1 (Peer Link)"| n3
-    end
-
-    n1 --> leaves
+    n1@{ shape: trap-b}
+    n4@{ shape: cyl}
+     n1:::spineSize
+     n4:::serverSize
+    classDef spineSize font-size:22px
+    classDef serverSize font-size:26px
