@@ -44,7 +44,7 @@ end
 
 ## Spine 1
 
-This step configures the spine as the Layer 3 uplink point for both MLAG leaf switches. Each spine interface is turned into a routed interface and given a /30 point-to-point IP address so the leaves can communicate before we add dynamic routing.
+This step configures the spine as the Layer 3 uplink point for both MLAG leaf switches. Each spine interface is turned into a routed interface and given a /30 point-to-point IP address so the leaves can communicate before we add dynamic routing. Also, for routing, I utilized OSPF, and put the connections to leaf 1/2 into area 0.
 
 ### 1) Connect to the spine
 From the Ubuntu host:
