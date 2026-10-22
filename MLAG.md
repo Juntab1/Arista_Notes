@@ -2,7 +2,7 @@
 
 ## Leaf 1 & 2 setup 
 
-This is the base MLAG configuration for a pair of leaf switches. The key idea is to create a dedicated peer VLAN and peer link so the switches can synchronize state while keeping the traffic out of the normal VLAN trunking path.
+This is the base MLAG configuration for a pair of leaf switches. The key idea is to create a dedicated peer VLAN and peer link so the switches can synchronize state while sending traffic out of the mlag port.
 
 - `vlan 4094` is the reserved MLAG peer VLAN.
 - `Port-Channel100` is the peer link between the two switches.
@@ -281,90 +281,9 @@ If the bond is healthy and the MLAG pair is behaving correctly, the server will 
 
 > This is the point where the lab starts behaving like a real network: the switches carry the topology, and the server becomes the end host that validates the design.
 
-Great! That confirms Alpine can see both network interfaces. Next, we’ll configure the switch-side MLAG port-channel and the Linux LACP bond so the host can use both links.
-Step 4 — Configure the leaves
-Run these commands in the Leaf1 EOS CLI:
-enable
-configure terminal
-
-vlan 10
-   name SERVERS
-!
-interface Ethernet3
-   channel-group 10 mode active
-!
-interface Port-Channel10
-   switchport mode access
-   switchport access vlan 10
-   mlag 10
-!
-end
-
-
-Now run the same configuration on Leaf2:
-enable
-configure terminal
-
-vlan 10
-   name SERVERS
-!
-interface Ethernet3
-   channel-group 10 mode active
-!
-interface Port-Channel10
-   switchport mode access
-   switchport access vlan 10
-   mlag 10
-!
-end
-
-
-This assumes Et3 is the interface connected to server1 on each leaf, as in the topology we added.
-What these commands do:
-- channel-group 10 mode active enables LACP on each physical switch port.
-- Port-Channel10 represents the combined logical interface.
-- mlag 10 pairs the downstream port-channel across both leaves.
-- VLAN 10 provides the Layer 2 network for the server.
-Step 5 — Configure Alpine's LACP bond
-Inside the Alpine container (server1), first install the networking tools if you haven't already:
-apk add --no-cache iproute2
-
-
-Then configure the bond:
-ip link add bond0 type bond mode 802.3ad
-ip link set eth1 down
-ip link set eth2 down
-ip link set eth1 master bond0
-ip link set eth2 master bond0
-ip link set bond0 up
-ip link set eth1 up
-ip link set eth2 up
-
-
-Give the host an IP address in VLAN 10:
-ip addr add 192.168.10.10/24 dev bond0
-
-
-Check the result:
-ip -br link
-ip -br addr
-cat /proc/net/bonding/bond0
-
-
-The last command should show the bond's status and LACP information. If bond creation fails, stop and share the error; the container may need additional kernel bonding support.
-Step 6 — Verify MLAG
-Run these commands on both leaves:
-show mlag
-show mlag interfaces
-show port-channel summary
-
-
-You should see Port-Channel10 associated with MLAG ID 10, and LACP should establish the links. The bond's two links may not both forward traffic at the same time in every failure or hashing scenario—that's normal for LACP.
-One important note: the host IP is only useful for communication with other devices in VLAN 10; you won't necessarily be able to ping it from the spine until you configure VLAN routing.
-
 ## Quick lab control
 
-For now, I am stopping the lab with:
+Stop the lab with:
 
 ```bash
 sudo containerlab stop --topo topology.clab.yml

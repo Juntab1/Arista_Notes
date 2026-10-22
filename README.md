@@ -60,7 +60,7 @@ The typical workflow is:
 Example:
 
 ```bash
-docker exec -it clab-mlag-lab-server1 bash
+docker exec -it clab-mlag-lab-server1 sh
 ip addr
 ```
 
