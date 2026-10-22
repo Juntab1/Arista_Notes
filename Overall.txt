@@ -1,9 +1,18 @@
-## Lab Overview and Business Impact
+Lab Overview and Business Impact
 
-This lab demonstrated the value of optimizing both the physical and logical layers of a network by implementing Multi-Chassis Link Aggregation (MLAG) in an Arista spine-leaf topology. MLAG allows the two leaf switches to operate together and present multiple physical links as a logical port-channel to a dual-homed server. This enables active-active Layer 2 connectivity, allowing both links to forward traffic while providing redundancy if a link or switch becomes unavailable.
+This lab demonstrated the value of optimizing both physical and logical layers of a network by implementing Multi-Chassis Link Aggregation (MLAG) 
+in an Arista spine-leaf topology. MLAG allows the two leaf switches to operate together and present multiple physical links as a logical port-channel 
+to a dual-homed server. This enables active-active Layer 2 connectivity, allowing both links to forward traffic while providing redundancy if a 
+link or switch becomes unavailable.
 
-From a business perspective, MLAG can improve network utilization compared to traditional Layer 2 designs that rely on the Spanning Tree Protocol (STP), where some redundant links may be blocked to prevent switching loops. By allowing multiple links to actively forward traffic, MLAG can increase available bandwidth and make better use of existing network infrastructure. Additionally, the spine-leaf architecture provides a scalable foundation for accommodating a company's growing connectivity requirements and network traffic demands.
+From a business perspective, MLAG can improve network utilization compared to traditional Layer 2 designs that rely on the Spanning Tree Protocol (STP), 
+where some redundant links may be blocked to prevent switching loops. By allowing multiple links to actively forward traffic, MLAG can increase available 
+bandwidth and make better use of existing network infrastructure. Additionally, the spine-leaf architecture provides a scalable foundation for 
+accommodating a company's growing connectivity requirements and network traffic demands.
 
-The technical implementation of this lab is documented in `MLAG.md`, which details the configuration of the spine, leaf switches, and server using Arista EOS within a Containerlab environment on my homelab.
+The technical implementation of this lab is documented in `MLAG.md`, which details the configuration of the spine, leaf switches, and server using 
+Arista EOS within a Containerlab environment on my homelab.
 
-Side note: I also used Arista's virtual ARP (VARP) in place for FHRP to avoid the active-standby architecture. VARP creates one virtual default-gateway that is represented between the two leaves; the two leaves are now able to share a Virtual IP and mac address that the server can access, and one of the two active leaves will be able to route the packet.
+Side note: I also used Arista's virtual ARP (VARP) in place for FHRP to avoid the active-standby architecture. VARP creates one virtual default-gateway 
+that is represented between the two leaves; the two leaves are now able to share a Virtual IP and mac address that the server can access, and one of the 
+two active leaves will be able to route the packet.
